@@ -1,0 +1,24 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+input {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+li {
+  list-style: none;
+}
+
+html,
+body {
+  height: 100%;
+  /* background-color: #15231b; */
+}
