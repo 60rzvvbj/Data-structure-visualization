@@ -1,11 +1,4 @@
-// let variables = {};
-// let emptyValue = Symbol();
-// let isCompile = false;
-// let task = [];
-// let runStatus = true;
-// let runTask = [];
-
-let memoryList = [];
+export const memoryList = [];
 
 function exec(key, fun) {
   let { task, isCompile, runTask } = memoryList[key];
@@ -38,8 +31,8 @@ function animation() {
 function user_statement(key, variable) {
   let { variables, emptyValue } = memoryList[key];
   return exec(key, async (callback) => {
-    variables[variable] = emptyValue;
     await animation();
+    variables[variable] = emptyValue;
     callback();
   });
 }
@@ -47,16 +40,20 @@ function user_statement(key, variable) {
 function user_assignment(key, variable, value, type) {
   let { variables } = memoryList[key];
   return exec(key, async (callback) => {
-    variables[variable] = value;
     await animation();
+    if (type == "variable") {
+      variables[variable] = read(key, value);
+    } else {
+      variables[variable] = value;
+    }
     callback();
   });
 }
 
 function read(key, variable) {
-  let { variables, emptyValue } = memoryList[key];
+  let { variables, emptyValue, consoleBox } = memoryList[key];
   if (variables[variable] == emptyValue) {
-    console.log(`变量${variable}未赋值不可使用`);
+    consoleBox.innerText += `\nerror: 变量${variable}未赋值不可使用\n`;
     return emptyValue;
   } else {
     return variables[variable];
@@ -64,13 +61,13 @@ function read(key, variable) {
 }
 
 function user_output(key, variable) {
-  let { emptyValue } = memoryList[key];
+  let { emptyValue, consoleBox } = memoryList[key];
   return exec(key, async (callback) => {
+    await animation();
     let res = read(key, variable);
     if (res != emptyValue) {
-      console.log(res);
+      consoleBox.innerText += res;
     }
-    await animation();
     callback();
   });
 }
@@ -81,7 +78,7 @@ function compile(key, fun) {
   memoryList[key].isCompile = false;
 }
 
-function next(key) {
+export function next(key) {
   let { task } = memoryList[key];
   if (task.length) {
     if (memoryList[key].nextStatus) {
@@ -116,7 +113,7 @@ function logMemory(key) {
   console.log(s);
 }
 
-function handelInput(key, input) {
+export function handelInput(key, input) {
   try {
     let code = `
 		function statement() {
@@ -137,33 +134,13 @@ function handelInput(key, input) {
 	`;
 
     // console.log(code);
+    let { codeBox } = memoryList[key];
+    codeBox.innerText = input;
+
     eval(code);
     return true;
   } catch (e) {
     console.log(e);
     return false;
   }
-}
-
-export function create(el) {
-  // console.log(el);
-  let key = memoryList.length;
-  memoryList.push({
-    variables: {},
-    emptyValue: Symbol(),
-    isCompile: false,
-    task: [],
-    runStatus: true,
-    nextStatus: true,
-    runTask: [],
-  });
-
-  return {
-    handelInput: (input) => {
-      return handelInput(key, input);
-    },
-    next: () => {
-      return next(key);
-    },
-  };
 }
