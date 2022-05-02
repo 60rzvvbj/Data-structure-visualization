@@ -29,18 +29,18 @@ function animation() {
 }
 
 function user_statement(key, variable) {
-  let { variables, emptyValue } = memoryList[key];
+  let { variables, emptyValue, animation } = memoryList[key];
   return exec(key, async (callback) => {
-    await animation();
+    await animation.statement(...arguments);
     variables[variable] = emptyValue;
     callback();
   });
 }
 
 function user_assignment(key, variable, value, type) {
-  let { variables } = memoryList[key];
+  let { variables, animation } = memoryList[key];
   return exec(key, async (callback) => {
-    await animation();
+    await animation.assignment(...arguments);
     if (type == "variable") {
       variables[variable] = read(key, value);
     } else {
@@ -61,9 +61,9 @@ function read(key, variable) {
 }
 
 function user_output(key, variable) {
-  let { emptyValue, consoleBox } = memoryList[key];
+  let { emptyValue, consoleBox, animation } = memoryList[key];
   return exec(key, async (callback) => {
-    await animation();
+    await animation.output(...arguments);
     let res = read(key, variable);
     if (res != emptyValue) {
       consoleBox.innerText += res;

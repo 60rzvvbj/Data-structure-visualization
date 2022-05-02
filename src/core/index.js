@@ -1,4 +1,5 @@
 import { memoryList, handelInput, next } from "./core.js";
+import { animation } from "./animation.js";
 
 export function create(showBox, codeBox, consoleBox) {
   // console.log({ showBox, codeBox, consoleBox });
@@ -14,6 +15,7 @@ export function create(showBox, codeBox, consoleBox) {
     showBox,
     codeBox,
     consoleBox,
+    animation: animation(showBox),
   });
 
   return {

@@ -105,10 +105,6 @@ export default {
   resize: none;
 }
 
-.control button {
-  /* font-size: 30px; */
-}
-
 .control .display {
   height: 100%;
 }
