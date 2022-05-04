@@ -1,19 +1,28 @@
-# visualization
+# 数据结构可视化
 
-## Project setup
+## 作用
+用户可在此平台上通过多种数据结构组合演示数据结构的作用和其能解决的问题  
+
+## 功能规划
+
+### 基础
+提供常见的数据结构和数据类型  
+用户可直接将数据结构从左侧拖拽进画布  
+画布上所有元素都可以自由拖拽  
+并触发相关数据结构操作  
+支持撤销重做功能  
+项目的保存和读取  
+
+### 进阶
+用户可以自定义类  
+可以自定义数据结构  
+自己封装数据结构内逻辑  
+操作录制重播中断功能  
+播放动画倍速功能  
+
+## 运行方式
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
-```
-
-### Compiles and minifies for production
-```
 npm run build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
