@@ -18,3 +18,23 @@ export function addClass(node, theClass) {
   }
   return node;
 }
+
+export function getDoubleRandom(l, r) {
+  return l + Math.random() * (r - l + 1);
+}
+
+export function getIntRandom(l, r) {
+  return parseInt(getDoubleRandom(l, r));
+}
+
+export function randomColor(l, r) {
+  return (
+    "rgb(" +
+    getIntRandom(l, r) +
+    "," +
+    getIntRandom(l, r) +
+    "," +
+    getIntRandom(l, r) +
+    ")"
+  );
+}

@@ -22,11 +22,11 @@ function exec(key, fun) {
   }
 }
 
-function animation() {
-  return new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
-}
+// function animation() {
+//   return new Promise((resolve) => {
+//     setTimeout(resolve, 2000);
+//   });
+// }
 
 function user_statement(key, variable) {
   let { variables, emptyValue, animation } = memoryList[key];
@@ -38,20 +38,31 @@ function user_statement(key, variable) {
 }
 
 function user_assignment(key, variable, value, type) {
-  let { variables, animation } = memoryList[key];
+  let { variables, animation, emptyValue } = memoryList[key];
   return exec(key, async (callback) => {
-    await animation.assignment(...arguments);
     if (type == "variable") {
-      variables[variable] = read(key, value);
+      let v = await read(key, value);
+      await animation.assignment(
+        variable,
+        v,
+        variables[variable] == emptyValue ? "start" : "middle"
+      );
+      variables[variable] = v;
     } else {
+      await animation.assignment(
+        variable,
+        value,
+        variables[variable] == emptyValue ? "start" : "middle"
+      );
       variables[variable] = value;
     }
     callback();
   });
 }
 
-function read(key, variable) {
-  let { variables, emptyValue, consoleBox } = memoryList[key];
+async function read(key, variable) {
+  let { variables, emptyValue, consoleBox, animation } = memoryList[key];
+  await animation.read(variable);
   if (variables[variable] == emptyValue) {
     consoleBox.innerText += `\nerror: 变量${variable}未赋值不可使用\n`;
     return emptyValue;
@@ -64,7 +75,7 @@ function user_output(key, variable) {
   let { emptyValue, consoleBox, animation } = memoryList[key];
   return exec(key, async (callback) => {
     await animation.output(...arguments);
-    let res = read(key, variable);
+    let res = await read(key, variable);
     if (res != emptyValue) {
       consoleBox.innerText += res;
     }
@@ -86,7 +97,7 @@ export function next(key) {
       task[0](() => {
         memoryList[key].nextStatus = true;
         task.shift();
-        logMemory(key);
+        // logMemory(key);
       });
     }
   }
