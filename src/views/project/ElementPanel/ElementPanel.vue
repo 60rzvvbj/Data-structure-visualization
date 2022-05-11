@@ -2,13 +2,10 @@
 	<div class="elememtPanelRoot">
 		<a-tabs v-model:activeKey="activeKey" animated :tabBarStyle="{ 'justify-content': 'space-around' }">
 			<a-tab-pane key="1" tab="基本数据类型">
-				<a-button>number</a-button>
-				<a-button>string</a-button>
-				<a-button>boolean</a-button>
+				<a-button v-for="item in baseDataType" @click="add('1', item)">{{ item }}</a-button>
 			</a-tab-pane>
 			<a-tab-pane key="2" tab="常见数据结构">
-				<a-button>stack</a-button>
-				<a-button>queue</a-button>
+				<a-button v-for="item in commonDataStructures" @click="add('2', item)">{{ item }}</a-button>
 			</a-tab-pane>
 		</a-tabs>
 	</div>
@@ -19,10 +16,22 @@ import { ref } from 'vue';
 
 export default {
 	name: 'ElementPanel',
-	setup() {
+	emits: ['add'],
+	setup(props, ctx) {
 		let activeKey = ref('1');
+
+		let baseDataType = ['number', 'string', 'boolean'];
+		let commonDataStructures = ['stack', 'queue'];
+
+		function add(type, value) {
+			ctx.emit('add', type, value);
+		}
+
 		return {
-			activeKey
+			activeKey,
+			baseDataType,
+			commonDataStructures,
+			add,
 		};
 	}
 };

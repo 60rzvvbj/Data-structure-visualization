@@ -2,14 +2,19 @@
 	<div class="projectRoot">
 		<Header></Header>
 		<div class="content">
-			<element-panel class="elementPanel"></element-panel>
+			<element-panel class="elementPanel" @add="addElement"></element-panel>
 		</div>
+		<a-modal v-model:visible="inputDataNameVisible" @cancel="handleInputName(false)" @ok="handleInputName(true)"
+			:closable="false">
+			<a-input v-model:value="addElementData.name" allowClear placeholder="请输入变量名"></a-input>
+		</a-modal>
 	</div>
 </template>
 
 <script lang="js">
 import ElementPanel from "./ElementPanel/ElementPanel.vue";
 import Header from '@/components/header/Header.vue';
+import { reactive, ref } from "vue";
 
 export default {
 	name: 'Project',
@@ -18,7 +23,39 @@ export default {
 		Header
 	},
 	setup() {
+		let projectName = "projectName";
+		let data = reactive([]);
+		let dataMap = {};
+		let inputDataNameVisible = ref(false);
+		let addElementData = reactive({});
+
+		function addElement(type, value) {
+			inputDataNameVisible.value = true;
+			addElementData.belong = type;
+			addElementData.type = value;
+			addElementData.name = '';
+		};
+
+		function handleInputName(type) {
+			if (type) {
+				if (addElementData.name != '') {
+					console.log(addElementData);
+					dataMap[addElementData.name] = {
+						...addElementData
+					};
+					data.push(dataMap[addElementData.name]);
+					addElementData.name = '';
+				}
+			}
+			inputDataNameVisible.value = false;
+		}
+
 		return {
+			data,
+			inputDataNameVisible,
+			addElement,
+			addElementData,
+			handleInputName,
 		};
 	}
 };
@@ -35,7 +72,6 @@ export default {
 
 .projectRoot .content {
 	flex: 1;
-
 }
 
 .projectRoot .elementPanel {
