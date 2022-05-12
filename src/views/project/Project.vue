@@ -3,6 +3,7 @@
 		<Header></Header>
 		<div class="content">
 			<element-panel class="elementPanel" @add="addElement"></element-panel>
+			<data-canvas :data="data"></data-canvas>
 		</div>
 		<a-modal v-model:visible="inputDataNameVisible" @cancel="handleInputName(false)" @ok="handleInputName(true)"
 			:closable="false">
@@ -12,15 +13,17 @@
 </template>
 
 <script lang="js">
-import ElementPanel from "./ElementPanel/ElementPanel.vue";
 import Header from '@/components/header/Header.vue';
+import ElementPanel from "./ElementPanel/ElementPanel.vue";
+import DataCanvas from './DataCanvas/DataCanvas.vue';
 import { reactive, ref } from "vue";
 
 export default {
 	name: 'Project',
 	components: {
+		Header,
 		ElementPanel,
-		Header
+		DataCanvas,
 	},
 	setup() {
 		let projectName = "projectName";
@@ -34,12 +37,13 @@ export default {
 			addElementData.belong = type;
 			addElementData.type = value;
 			addElementData.name = '';
+			addElementData.value = null;
 		};
 
 		function handleInputName(type) {
 			if (type) {
 				if (addElementData.name != '') {
-					console.log(addElementData);
+					// console.log(addElementData);
 					dataMap[addElementData.name] = {
 						...addElementData
 					};
